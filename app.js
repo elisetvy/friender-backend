@@ -9,13 +9,15 @@ const upload = multer();
 const { NotFoundError } = require("./expressError");
 
 const User = require("./models/user");
+const cors = require("cors")
 
+app.use(cors());
 app.use(express.json());
 
 /** Uploads file to S3 bucket and returns image URL. */
-app.post("/", upload.single('file'), (req, res, next) => {
+app.post("/", upload.single('file'), async (req, res, next) => {
   console.log(req.file, "REQ FILE")
-  const imageUrl = User.handlePhotoData(req.file.buffer);
+  const imageUrl = await User.handlePhotoData(req.file);
   console.log(imageUrl, "IMAGE URL")
 
   return res.json({ imageUrl });
