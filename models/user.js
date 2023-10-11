@@ -20,6 +20,7 @@ class User {
       Bucket: process.env.BUCKET_NAME,
       Key: key,
       Body: buffer,
+      ContentType: 'image/jpeg',
     };
 
     s3.upload(params, (err, data) => {
