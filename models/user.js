@@ -1,15 +1,16 @@
 "use strict";
-const { PutObjectCommand, S3Client } = require("@aws-sdk/client-s3");
+
 require("dotenv").config();
 
-const s3 = require("../s3");
+const { PutObjectCommand, S3Client } = require("@aws-sdk/client-s3");
+
 const uuid = require("uuid");
-const client = new S3Client({region:'us-west-2'});
+const client = new S3Client({ region: process.env.BUCKET_REGION });
 
 class User {
 
-  static setProfile(buffer) {
-    const url = this.handlePhotoData(buffer);
+  static setProfile(file) {
+    const url = this.handlePhotoData(file);
 
     // TODO: DB QUERY
   }
@@ -25,22 +26,16 @@ class User {
       ACL:"public-read"
     };
 
-    // s3.upload(params, (err, data) => {
-    //   if (err) {
-    //     console.error(err); // TODO: throw error?
-    //   }
-    // });
+    const command = new PutObjectCommand(params);
 
-      const command = new PutObjectCommand(params);
-
-      try {
-        const response = await client.send(command);
-        console.log(response);
-      } catch (err) {
-        console.error(err);
-      }
+    try {
+      const response = await client.send(command);
+      console.log(response);
       return `https://${process.env.BUCKET_NAME}.s3.${process.env.BUCKET_REGION}.amazonaws.com/${key}`;
-    };
+    } catch (err) {
+      console.error(err);
+    }
+  };
   }
 
 

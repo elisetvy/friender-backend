@@ -3,9 +3,12 @@ require("dotenv").config();
 const express = require("express");
 const app = express();
 
+const bcrypt = require("bcrypt");
+
 const multer = require("multer");
 const upload = multer();
 
+const { BCRYPT_WORK_FACTOR } = require("./config");
 const { NotFoundError } = require("./expressError");
 
 const User = require("./models/user");
@@ -16,9 +19,7 @@ app.use(express.json());
 
 /** Uploads file to S3 bucket and returns image URL. */
 app.post("/", upload.single('file'), async (req, res, next) => {
-  console.log(req.file, "REQ FILE")
   const imageUrl = await User.handlePhotoData(req.file);
-  console.log(imageUrl, "IMAGE URL")
 
   return res.json({ imageUrl });
 })

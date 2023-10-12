@@ -7,16 +7,15 @@ require("dotenv").config();
 
 const SECRET_KEY = process.env.SECRET_KEY || "secret-dev";
 
-const AWS_SECRET_KEY = process.env.AWS_SECRET_KEY;
-
 const PORT = +process.env.PORT || 3001;
 
 // Use dev database, testing database, or via env var, production database
-// function getDatabaseUri() {
-//   return (process.env.NODE_ENV === "test")
-//       ? "postgresql:///jobly_test"
-//       : process.env.DATABASE_URL || "postgresql:///jobly";
-// }
+function getDatabaseUri() {
+  return (process.env.NODE_ENV === "test")
+      ? "postgresql:///friender_test"
+      : process.env.DATABASE_URL || "postgresql:///friender";
+}
+
 // Speed up bcrypt during tests, since the algorithm safety isn't being tested
 //
 // WJB: Evaluate in 2021 if this should be increased to 13 for non-test use
@@ -37,5 +36,5 @@ module.exports = {
   SECRET_KEY,
   PORT,
   BCRYPT_WORK_FACTOR,
-  AWS_SECRET_KEY
+  getDatabaseUri,
 };
