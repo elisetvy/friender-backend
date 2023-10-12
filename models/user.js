@@ -72,6 +72,25 @@ class User {
     return user;
   }
 
+  static async getAll() {
+    const result = await db.query(`
+        SELECT users.username,
+               first_name AS "firstName",
+               last_name  AS "lastName",
+               email,
+               zip_code AS "zipCode",
+               friend_radius AS "friendRadius",
+               hobbies,
+               interests,
+               photo_profile AS "profilePic"
+        FROM users
+        JOIN photos ON users.username = photos.username
+        ORDER BY username`,
+    );
+
+    return result.rows;
+  }
+
   static setProfile(file) {
     const url = this.handlePhotoData(file);
 

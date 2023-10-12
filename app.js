@@ -36,7 +36,12 @@ app.post("/upload", upload.single('file'), async (req, res, next) => {
   return res.json({ imageUrl });
 })
 
+/** Get all cats. */
+app.get("/allcats", async (req, res, next) => {
+  const users = await User.getAll();
 
+  return res.json(users);
+})
 
 /** Handle 404 errors -- this matches everything */
 app.use(function (req, res, next) {
