@@ -49,3 +49,12 @@ VALUES ('Jay',
         'pinball',
         'pinball machines'
         );
+
+INSERT INTO photos(username, photo_profile)
+VALUES('Jay', 'https://people.com/thmb/AcLIEFQcs2R9bzxkdgSznJBKhHQ=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc():focal(999x0:1001x2)/fat-cat-4-5d7ae9c19c4e4e2689897642e7a3363c.jpg'),
+('BingsuPaws', 'https://sphynxcatwear.com/wp-content/uploads/2020/07/KiwiH.jpg'),
+('Goose', 'https://www.whitemarmotte.com/wp-content/uploads/2020/06/lynx_head.jpg'),
+('Bonksu', 'https://www.livingdesert.org/site/assets/files/4764/mountain_lionheader.1000x800se.png'),
+('Cream', 'https://www.thesprucepets.com/thmb/17UY4UpiMekV7WpeXDziXsnt7q4=/1646x0/filters:no_upscale():strip_icc()/GettyImages-145577979-d97e955b5d8043fd96747447451f78b7.jpg');
+
+

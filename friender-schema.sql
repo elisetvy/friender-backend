@@ -14,10 +14,10 @@ CREATE TABLE users (
 CREATE TABLE photos (
   username VARCHAR(20) NOT NULL
     REFERENCES users(username),
-  photo_profile VARCHAR(100) NOT NULL DEFAULT 'https://friender-bucket-79.s3.us-west-2.amazonaws.com/default-user.jpg',
-  photo_one VARCHAR(100),
-  photo_two VARCHAR(100),
-  photo_three VARCHAR(100),
-  photo_four VARCHAR(100),
-  photo_five VARCHAR(100)
+  photo_profile VARCHAR(200) NOT NULL DEFAULT 'https://friender-bucket-79.s3.us-west-2.amazonaws.com/default-user.jpg',
+  photo_one VARCHAR(200),
+  photo_two VARCHAR(200),
+  photo_three VARCHAR(200),
+  photo_four VARCHAR(200),
+  photo_five VARCHAR(200)
 )

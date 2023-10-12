@@ -20,9 +20,13 @@ app.use(express.json());
 /** Register a cat. */
 app.post("/register", upload.single('file'), async (req, res, next) => {
   const userData = JSON.parse(JSON.stringify(req.body));
-  const user = await User.register(userData)
-  const imageUrl = await User.handlePhotoData(req.file);
-  return res.json('hello');
+  const user = await User.register(userData);
+  const imageUrl = await User.handleProfilePic(user.username, req.file);
+  console.log(`imageURl is `, imageUrl);
+  user.profilePic = imageUrl;
+
+  console.log(`user about to be sent back is ,`, user);
+  return res.json(user);
 });
 
 /** Uploads file to S3 bucket and returns image URL. */

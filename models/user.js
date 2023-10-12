@@ -55,16 +55,16 @@ class User {
                     friend_radius AS "friendRadius",
                     hobbies,
                     interests`, [
-          username,
-          hashedPassword,
-          firstName,
-          lastName,
-          email,
-          zipcode,
-          friendRadius,
-          hobbies,
-          interests
-        ],
+      username,
+      hashedPassword,
+      firstName,
+      lastName,
+      email,
+      zipcode,
+      friendRadius,
+      hobbies,
+      interests
+    ],
     );
 
     const user = result.rows[0];
@@ -80,7 +80,7 @@ class User {
 
   /** Upload file to bucket. Returns image URL. */
 
-  static async handlePhotoData(file) {
+  static async handleProfilePic(username, file) {
     const key = uuid.v4();
 
     const params = {
@@ -96,10 +96,28 @@ class User {
     try {
       const response = await client.send(command);
       console.log(response);
-      return `https://${process.env.BUCKET_NAME}.s3.${process.env.BUCKET_REGION}.amazonaws.com/${key}`;
+
     } catch (err) {
-      console.error(err);
+      throw new BadRequestError(`failed to upload to bucket`);
     }
+
+    const url = `https://${process.env.BUCKET_NAME}.s3.${process.env.BUCKET_REGION}.amazonaws.com/${key}`;
+    const result = await db.query(`
+    INSERT INTO photos
+    (username,
+     photo_profile)
+    VALUES ($1, $2)
+    RETURNING
+        username,
+        photo_profile AS "profilePhoto"`, [
+        username,
+        url
+        ],
+    );
+
+    const user = result.rows[0];
+        console.log(`user object after profile pic was inserted is`, user);
+    return user.profilePhoto;
   };
 }
 
