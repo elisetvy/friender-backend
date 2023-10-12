@@ -17,8 +17,16 @@ const cors = require("cors")
 app.use(cors());
 app.use(express.json());
 
+/** Register a cat. */
+app.post("/register", upload.single('file'), async (req, res, next) => {
+  const userData = JSON.parse(JSON.stringify(req.body));
+  const user = await User.register(userData)
+  const imageUrl = await User.handlePhotoData(req.file);
+  return res.json('hello');
+});
+
 /** Uploads file to S3 bucket and returns image URL. */
-app.post("/", upload.single('file'), async (req, res, next) => {
+app.post("/upload", upload.single('file'), async (req, res, next) => {
   const imageUrl = await User.handlePhotoData(req.file);
 
   return res.json({ imageUrl });
