@@ -72,6 +72,29 @@ class User {
     return user;
   }
 
+  static async login({username, password}) {
+
+    const result = await db.query(`
+        SELECT username,
+               password
+        FROM users
+        WHERE username = $1`,[username]
+    );
+
+    const user = result.rows[0];
+
+    if (user) {
+      // compare hashed password to a new hash from password
+      const isValid = await bcrypt.compare(password, user.password);
+      if (isValid === true) {
+        delete user.password;
+        return user.username;
+      }
+    }
+
+    throw new UnauthorizedError("Invalid Username/Password");
+  }
+
   static async getAll() {
     const result = await db.query(`
         SELECT users.username,

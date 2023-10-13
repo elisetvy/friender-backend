@@ -36,6 +36,12 @@ app.post("/upload", upload.single('file'), async (req, res, next) => {
   return res.json({ imageUrl });
 })
 
+app.post("/logincat",  async (req, res, next) => {
+  const username = await User.login(req.body);
+
+  return res.json(username);
+})
+
 /** Get all cats. */
 app.get("/allcats", async (req, res, next) => {
   const users = await User.getAll();
