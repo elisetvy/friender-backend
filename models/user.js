@@ -123,27 +123,30 @@ class User {
   /** Upload file to bucket. Returns image URL. */
 
   static async handleProfilePic(username, file) {
-    const key = uuid.v4();
+    let url = "https://i.pinimg.com/736x/24/1f/49/241f49ca612ef379a78fdcf7b8471ada.jpg";
 
-    const params = {
-      Bucket: process.env.BUCKET_NAME,
-      Key: key,
-      Body: file.buffer,
-      ContentType: file.mimetype,
-      ACL: "public-read"
-    };
+    if (file) {
+      const key = uuid.v4();
 
-    const command = new PutObjectCommand(params);
+      const params = {
+        Bucket: process.env.BUCKET_NAME,
+        Key: key,
+        Body: file.buffer,
+        ContentType: file.mimetype,
+        ACL: "public-read"
+      };
 
-    try {
-      const response = await client.send(command);
-      console.log(response);
+      const command = new PutObjectCommand(params);
 
-    } catch (err) {
-      throw new BadRequestError(`failed to upload to bucket`);
+      try {
+        const response = await client.send(command);
+        url = `https://${process.env.BUCKET_NAME}.s3.${process.env.BUCKET_REGION}.amazonaws.com/${key}`;
+
+      } catch (err) {
+        throw new BadRequestError(`failed to upload to bucket`);
+      }
     }
 
-    const url = `https://${process.env.BUCKET_NAME}.s3.${process.env.BUCKET_REGION}.amazonaws.com/${key}`;
     const result = await db.query(`
     INSERT INTO photos
     (username,
@@ -158,7 +161,6 @@ class User {
     );
 
     const user = result.rows[0];
-        console.log(`user object after profile pic was inserted is`, user);
     return user.profilePhoto;
   };
 }
