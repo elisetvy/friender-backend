@@ -105,7 +105,7 @@ class User {
                photo,
                zip,
                radius,
-               bio,
+               bio
         FROM users
         ORDER BY username`,
     );
