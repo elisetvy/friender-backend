@@ -84,7 +84,6 @@ class User {
     const user = result.rows[0];
 
     if (user) {
-      // compare hashed password to a new hash from password
       const isValid = await bcrypt.compare(password, user.password);
       if (isValid === true) {
         delete user.password;
@@ -118,10 +117,10 @@ class User {
     // TODO: DB QUERY
   }
 
-  /** Upload file to bucket. Returns image URL. */
+  /** Upload file to bucket. Return image URL. */
 
-  static async handleProfilePic(username, file) {
-    let url = "https://i.pinimg.com/736x/24/1f/49/241f49ca612ef379a78fdcf7b8471ada.jpg";
+  static async handlePhoto(username, file) {
+    let url = "https://i.pinimg.com/originals/33/70/29/33702949116bc77168dd93bdecc9f955.png";
 
     if (file) {
       const key = uuid.v4();
@@ -140,26 +139,11 @@ class User {
         const response = await client.send(command);
         url = `https://${process.env.BUCKET_NAME}.s3.${process.env.BUCKET_REGION}.amazonaws.com/${key}`;
 
+        return url;
       } catch (err) {
-        throw new BadRequestError(`failed to upload to bucket`);
+        throw new BadRequestError('Failed to upload');
       }
     }
-
-    const result = await db.query(`
-    INSERT INTO photos
-    (username,
-     photo_profile)
-    VALUES ($1, $2)
-    RETURNING
-        username,
-        photo_profile AS "profilePhoto"`, [
-        username,
-        url
-        ],
-    );
-
-    const user = result.rows[0];
-    return user.profilePhoto;
   };
 }
 
