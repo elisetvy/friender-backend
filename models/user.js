@@ -19,8 +19,8 @@ const uuid = require("uuid");
 class User {
 
   static async register(
-    { username, password, firstName, lastName, email, zipcode, friendRadius,
-      hobbies, interests }) {
+    { username, password, fname, lname, email, photo, zip, radius,
+      bio }) {
 
     const duplicateCheck = await db.query(`
       SELECT username
@@ -38,32 +38,32 @@ class User {
                 INSERT INTO users
                 (username,
                  password,
-                 first_name,
-                 last_name,
+                 fname,
+                 lname,
                  email,
-                 zip_code,
-                 friend_radius,
-                 hobbies,
-                 interests)
+                 photo,
+                 zip,
+                 radius,
+                 bio)
                 VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
                 RETURNING
                     username,
-                    first_name AS "firstName",
-                    last_name AS "lastName",
+                    fname,
+                    lname,
                     email,
-                    zip_code AS "zipcode",
-                    friend_radius AS "friendRadius",
-                    hobbies,
-                    interests`, [
+                    photo,
+                    zip,
+                    radius,
+                    bio`, [
       username,
       hashedPassword,
-      firstName,
-      lastName,
+      fname,
+      lname,
+      photo,
       email,
-      zipcode,
-      friendRadius,
-      hobbies,
-      interests
+      zip,
+      radius,
+      bio
     ],
     );
 
@@ -97,17 +97,15 @@ class User {
 
   static async getAll() {
     const result = await db.query(`
-        SELECT users.username,
-               first_name AS "firstName",
-               last_name  AS "lastName",
+        SELECT username,
+               fname,
+               lname,
                email,
-               zip_code AS "zipCode",
-               friend_radius AS "friendRadius",
-               hobbies,
-               interests,
-               photo_profile AS "profilePic"
+               photo,
+               zip,
+               radius,
+               bio,
         FROM users
-        JOIN photos ON users.username = photos.username
         ORDER BY username`,
     );
 
