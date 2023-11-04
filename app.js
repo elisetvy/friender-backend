@@ -17,33 +17,38 @@ const cors = require("cors")
 app.use(cors());
 app.use(express.json());
 
-/** Register a cat. */
+/** Register user. */
 app.post("/register", upload.single('file'), async (req, res, next) => {
   const userData = JSON.parse(JSON.stringify(req.body));
-  const user = await User.register(userData);
-  const imageUrl = await User.handleProfilePic(user.username, req.file);
-  console.log(`imageURl is `, imageUrl);
-  user.profilePic = imageUrl;
+  let user;
 
-  console.log(`user about to be sent back is ,`, user);
+  if (req.file) {
+    const imageUrl = await User.handlePhoto(user.username, req.file);
+    userData.photo = imageUrl;
+
+    user = await User.register(userData);
+  } else {
+    user = await User.register(userData);
+  }
+
   return res.json(user);
 });
 
-/** Uploads file to S3 bucket and returns image URL. */
+/** Upload file to S3 bucket and return image URL. */
 app.post("/upload", upload.single('file'), async (req, res, next) => {
-  const imageUrl = await User.handlePhotoData(req.file);
+  const imageUrl = await User.handlePhoto(req.file);
 
   return res.json({ imageUrl });
 })
 
-app.post("/logincat",  async (req, res, next) => {
+app.post("/login",  async (req, res, next) => {
   const username = await User.login(req.body);
 
   return res.json(username);
 })
 
-/** Get all cats. */
-app.get("/allcats", async (req, res, next) => {
+/** Get all users. */
+app.get("/users", async (req, res, next) => {
   const users = await User.getAll();
 
   return res.json(users);
