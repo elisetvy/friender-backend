@@ -16,10 +16,12 @@ const client = new S3Client({ region: process.env.BUCKET_REGION });
 
 const uuid = require("uuid");
 
+const DEFAULT_PHOTO = 'https://i.pinimg.com/originals/33/70/29/33702949116bc77168dd93bdecc9f955.png';
+
 class User {
 
   static async register(
-    { username, password, fname, lname, email, photo, zip, radius,
+    { username, password, fname, lname, email, photo=DEFAULT_PHOTO, zip, radius,
       bio }) {
 
     const duplicateCheck = await db.query(`
@@ -119,30 +121,24 @@ class User {
 
   /** Upload file to bucket. Return image URL. */
 
-  static async handlePhoto(username, file) {
-    let url = "https://i.pinimg.com/originals/33/70/29/33702949116bc77168dd93bdecc9f955.png";
+  static async handlePhoto(file) {
+    const key = uuid.v4();
 
-    if (file) {
-      const key = uuid.v4();
+    const params = {
+      Bucket: process.env.BUCKET_NAME,
+      Key: key,
+      Body: file.buffer,
+      ContentType: file.mimetype,
+      ACL: "public-read"
+    };
 
-      const params = {
-        Bucket: process.env.BUCKET_NAME,
-        Key: key,
-        Body: file.buffer,
-        ContentType: file.mimetype,
-        ACL: "public-read"
-      };
+    const command = new PutObjectCommand(params);
 
-      const command = new PutObjectCommand(params);
-
-      try {
-        const response = await client.send(command);
-        url = `https://${process.env.BUCKET_NAME}.s3.${process.env.BUCKET_REGION}.amazonaws.com/${key}`;
-
-        return url;
-      } catch (err) {
-        throw new BadRequestError('Failed to upload');
-      }
+    try {
+      const response = await client.send(command);
+      return `https://${process.env.BUCKET_NAME}.s3.${process.env.BUCKET_REGION}.amazonaws.com/${key}`;
+    } catch (err) {
+      throw new BadRequestError('Failed to upload');
     }
   };
 }
