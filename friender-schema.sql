@@ -5,8 +5,10 @@ CREATE TABLE users (
   lname VARCHAR(20) NOT NULL,
   email VARCHAR(30) NOT NULL UNIQUE
     CHECK (position('@' IN email) > 1),
+  dob VARCHAR(10) NOT NULL,
   photo TEXT NOT NULL,
   zip VARCHAR(5) NOT NULL,
+  latlng TEXT NOT NULL,
   radius INTEGER NOT NULL DEFAULT 25,
   bio TEXT
 );

@@ -1,3 +1,5 @@
+// TODO: MAKE SURE USERNAME + MORE ? GOES IN DB LOWERCASE
+
 "use strict";
 
 require("dotenv").config();
@@ -17,11 +19,12 @@ const client = new S3Client({ region: process.env.BUCKET_REGION });
 const uuid = require("uuid");
 
 const DEFAULT_PHOTO = 'https://i.pinimg.com/originals/33/70/29/33702949116bc77168dd93bdecc9f955.png';
+const DEFAULT_RADIUS = 25
 
 class User {
 
   static async register(
-    { username, password, fname, lname, email, photo=DEFAULT_PHOTO, zip, radius,
+    { username, password, fname, lname, email, photo=DEFAULT_PHOTO, zip, radius=DEFAULT_RADIUS,
       bio }) {
 
     const duplicateCheck = await db.query(`
