@@ -1,11 +1,21 @@
 // TODO: MAKE SURE USERNAME + MORE ? GOES IN DB LOWERCASE
+// TODO: LOWERCASE USERNAMES WHEN LOGGING IN ALSO
+// TODO: NOT SURE WHY RADIUS IS DEFAULTING TO 0 IF LEFT EMPTY
 
 "use strict";
 
 require("dotenv").config();
+
 const db = require("../db");
+
 const bcrypt = require("bcrypt");
 const { BCRYPT_WORK_FACTOR } = require("../config.js");
+
+const { PutObjectCommand, S3Client } = require("@aws-sdk/client-s3");
+const client = new S3Client({ region: process.env.BUCKET_REGION });
+const uuid = require("uuid");
+
+const { convertZip } = require("../utils");
 
 const {
   NotFoundError,
@@ -13,18 +23,13 @@ const {
   UnauthorizedError,
 } = require("../expressError");
 
-const { PutObjectCommand, S3Client } = require("@aws-sdk/client-s3");
-const client = new S3Client({ region: process.env.BUCKET_REGION });
-
-const uuid = require("uuid");
-
 const DEFAULT_PHOTO = 'https://i.pinimg.com/originals/33/70/29/33702949116bc77168dd93bdecc9f955.png';
-const DEFAULT_RADIUS = 25
+const DEFAULT_RADIUS = 25;
 
 class User {
 
   static async register(
-    { username, password, fname, lname, email, photo=DEFAULT_PHOTO, zip, radius=DEFAULT_RADIUS,
+    { username, password, fname, lname, email, dob, photo=DEFAULT_PHOTO, zip, radius,
       bio }) {
 
     const duplicateCheck = await db.query(`
@@ -39,6 +44,14 @@ class User {
 
     const hashedPassword = await bcrypt.hash(password, BCRYPT_WORK_FACTOR);
 
+    const latlng = await convertZip(zip);
+
+    if (radius < 1) {
+      radius = DEFAULT_RADIUS;
+    }
+
+    // TODO: CHECK AGE BEFORE INSERT INTO DB
+
     const result = await db.query(`
                 INSERT INTO users
                 (username,
@@ -46,27 +59,33 @@ class User {
                  fname,
                  lname,
                  email,
+                 dob,
                  photo,
                  zip,
+                 latlng,
                  radius,
                  bio)
-                VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+                VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
                 RETURNING
                     username,
                     fname,
                     lname,
                     email,
+                    dob,
                     photo,
                     zip,
+                    latlng,
                     radius,
                     bio`, [
       username,
       hashedPassword,
       fname,
       lname,
-      photo,
       email,
+      dob,
+      photo,
       zip,
+      latlng,
       radius,
       bio
     ],
