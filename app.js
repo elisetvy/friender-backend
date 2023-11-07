@@ -12,6 +12,8 @@ const { BCRYPT_WORK_FACTOR } = require("./config");
 const { NotFoundError } = require("./expressError");
 
 const User = require("./models/user");
+const { createToken } = require("./tokens");
+
 const cors = require("cors")
 
 app.use(cors());
@@ -31,7 +33,9 @@ app.post("/register", upload.single('file'), async (req, res, next) => {
     user = await User.register(userData);
   }
 
-  return res.json(user);
+  const token = createToken(user.username)
+
+  return res.json({ token });
 });
 
 /** Upload file to S3 bucket and return image URL. */
@@ -42,9 +46,10 @@ app.post("/upload", upload.single('file'), async (req, res, next) => {
 })
 
 app.post("/login",  async (req, res, next) => {
-  const username = await User.login(req.body);
+  const user = await User.authenticate(req.body);
+  const token = createToken(user.username);
 
-  return res.json(username);
+  return res.json({ token });
 })
 
 /** Get all users. */
@@ -53,6 +58,12 @@ app.get("/users", async (req, res, next) => {
 
   return res.json(users);
 })
+
+/** Get a user. */
+app.get("/:username", async function (req, res, next) {
+  const user = await User.get(req.params.username);
+  return res.json({ user });
+});
 
 /** Handle 404 errors -- this matches everything */
 app.use(function (req, res, next) {

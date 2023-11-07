@@ -96,13 +96,22 @@ class User {
     return user;
   }
 
-  static async login({username, password}) {
+  static async authenticate({ username, password }) {
 
     const result = await db.query(`
         SELECT username,
-               password
+               password,
+               fname,
+               lname,
+               email,
+               dob,
+               photo,
+               zip,
+               latlng,
+               radius,
+               bio
         FROM users
-        WHERE username = $1`,[username]
+        WHERE username = $1`, [username]
     );
 
     const user = result.rows[0];
@@ -111,7 +120,7 @@ class User {
       const isValid = await bcrypt.compare(password, user.password);
       if (isValid === true) {
         delete user.password;
-        return user.username;
+        return user;
       }
     }
 
@@ -139,6 +148,28 @@ class User {
     const url = this.handlePhotoData(file);
 
     // TODO: DB QUERY
+  }
+
+  /** Given a username, return data about user. */
+  static async get(username) {
+    const userRes = await db.query(`
+        SELECT username,
+               fname,
+               lname,
+               email,
+               photo,
+               zip,
+               radius,
+               bio
+        FROM users
+        WHERE username = $1`, [username],
+    );
+
+    const user = userRes.rows[0];
+
+    if (!user) throw new NotFoundError(`No user: ${username}`);
+
+    return user;
   }
 
   /** Upload file to bucket. Return image URL. */

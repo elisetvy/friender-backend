@@ -10,7 +10,7 @@ async function convertZip(zip) {
   return data.lat.toString() + ',' + data.lng.toString();
 }
 
-/** Get distance in miles between 2 zip codes. */
+/** Get distance in miles between 2 ZIP codes. */
 async function getDistance(zip1, zip2) {
   const resp = await fetch(`https://www.mapquestapi.com/directions/v2/route?key=${process.env.MAPQUEST_KEY}&from=${zip1}&to=${zip2}`);
   return (await resp.json()).route.distance;
@@ -26,4 +26,6 @@ async function checkRadius(zip1, zip2, radius) {
 
 module.exports = {
   convertZip,
+  getDistance,
+  checkRadius,
 };
