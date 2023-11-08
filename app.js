@@ -24,6 +24,7 @@ app.use(express.json());
 /** Register user. */
 app.post("/register", upload.single('file'), async (req, res, next) => {
   const userData = JSON.parse(JSON.stringify(req.body));
+
   let user;
 
   if (req.file) {

@@ -135,6 +135,7 @@ class User {
                email,
                photo,
                zip,
+               latlng,
                radius,
                bio
         FROM users
@@ -142,7 +143,7 @@ class User {
     );
 
     return result.rows;
-  }xw
+  }
 
   /** Given a username, return data about user. */
   static async get(username) {
@@ -153,6 +154,7 @@ class User {
                email,
                photo,
                zip,
+               latlng,
                radius,
                bio
         FROM users
