@@ -27,7 +27,7 @@ app.post("/register", upload.single('file'), async (req, res, next) => {
   let user;
 
   if (req.file) {
-    const imageUrl = await User.handlePhoto(user.username, req.file);
+    const imageUrl = await User.handlePhoto(req.file);
     userData.photo = imageUrl;
 
     user = await User.register(userData);

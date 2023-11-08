@@ -142,13 +142,7 @@ class User {
     );
 
     return result.rows;
-  }
-
-  static setProfile(file) {
-    const url = this.handlePhotoData(file);
-
-    // TODO: DB QUERY
-  }
+  }xw
 
   /** Given a username, return data about user. */
   static async get(username) {
@@ -181,14 +175,11 @@ class User {
       Bucket: process.env.BUCKET_NAME,
       Key: key,
       Body: file.buffer,
-      ContentType: file.mimetype,
-      ACL: "public-read"
+      ContentType: file.mimetype
     };
 
-    const command = new PutObjectCommand(params);
-
     try {
-      const response = await client.send(command);
+      await client.send(new PutObjectCommand(params));
       return `https://${process.env.BUCKET_NAME}.s3.${process.env.BUCKET_REGION}.amazonaws.com/${key}`;
     } catch (err) {
       throw new BadRequestError('Failed to upload');
