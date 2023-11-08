@@ -8,8 +8,10 @@ const bcrypt = require("bcrypt");
 const multer = require("multer");
 const upload = multer();
 
-const { BCRYPT_WORK_FACTOR } = require("./config");
+const { BCRYPT_WORK_FACTOR, SECRET_KEY } = require("./config");
 const { NotFoundError } = require("./expressError");
+
+const jwt = require("jsonwebtoken");
 
 const User = require("./models/user");
 const { createToken } = require("./tokens");
@@ -33,7 +35,7 @@ app.post("/register", upload.single('file'), async (req, res, next) => {
     user = await User.register(userData);
   }
 
-  const token = createToken(user.username)
+  const token = createToken(user)
 
   return res.json({ token });
 });
@@ -47,7 +49,7 @@ app.post("/upload", upload.single('file'), async (req, res, next) => {
 
 app.post("/login",  async (req, res, next) => {
   const user = await User.authenticate(req.body);
-  const token = createToken(user.username);
+  const token = createToken(user);
 
   return res.json({ token });
 })
