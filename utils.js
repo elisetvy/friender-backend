@@ -5,15 +5,19 @@ require("dotenv").config();
 /** Convert zip code to lat/lng. */
 async function convertZip(zip) {
   const resp = await fetch(`https://www.mapquestapi.com/geocoding/v1/address?key=${process.env.MAPQUEST_KEY}&location=${zip}`);
-  const data = (await resp.json()).results[0].locations[0].latLng;
+  const data = await resp.json()
 
-  return data.lat.toString() + ',' + data.lng.toString();
+  const coords = data.results[0].locations[0].latLng;
+
+  return coords.lat.toString() + ',' + coords.lng.toString();
 }
 
 /** Get distance in miles between 2 ZIP codes. */
 async function getDistance(zip1, zip2) {
   const resp = await fetch(`https://www.mapquestapi.com/directions/v2/route?key=${process.env.MAPQUEST_KEY}&from=${zip1}&to=${zip2}`);
-  return (await resp.json()).route.distance;
+  const data = await resp.json();
+
+  return data.route.distance;
 }
 
 /** Check if user is within radius. */
