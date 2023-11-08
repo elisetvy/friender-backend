@@ -60,7 +60,7 @@ app.get("/users", async (req, res, next) => {
 })
 
 /** Get a user. */
-app.get("/:username", async function (req, res, next) {
+app.get("/users/:username", async function (req, res, next) {
   const user = await User.get(req.params.username);
   return res.json({ user });
 });
