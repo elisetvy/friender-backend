@@ -1,5 +1,3 @@
-// TODO: NOT SURE WHY RADIUS IS DEFAULTING TO 0 IF LEFT EMPTY
-
 "use strict";
 
 require("dotenv").config();

@@ -1,7 +1,7 @@
 CREATE TABLE users (
   username VARCHAR(20) PRIMARY KEY,
   password VARCHAR(100) NOT NULL,
-  fname VARCHAR(20) NOT NULL,
+  name VARCHAR(20) NOT NULL,
   email VARCHAR(50) NOT NULL UNIQUE
     CHECK (position('@' IN email) > 1),
   dob VARCHAR(10) NOT NULL,
@@ -10,4 +10,12 @@ CREATE TABLE users (
   latlng TEXT NOT NULL,
   radius INTEGER NOT NULL,
   bio TEXT
+);
+
+CREATE TABLE messages (
+  id SERIAL PRIMARY KEY,
+  from_username TEXT NOT NULL REFERENCES users,
+  to_username TEXT NOT NULL REFERENCES users,
+  body TEXT NOT NULL,
+  timestamp TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP NOT NULL
 );
