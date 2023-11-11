@@ -52,7 +52,7 @@ class User {
                 INSERT INTO users
                 (username,
                  password,
-                 fname,
+                 name,
                  email,
                  dob,
                  photo,
@@ -63,7 +63,7 @@ class User {
                 VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
                 RETURNING
                     username,
-                    fname,
+                    name,
                     email,
                     dob,
                     photo,
@@ -73,7 +73,7 @@ class User {
                     bio`, [
       username.toLowerCase(),
       hashedPassword,
-      fname.toLowerCase(),
+      name.toLowerCase(),
       email.toLowerCase(),
       dob,
       photo,
@@ -94,7 +94,7 @@ class User {
     const result = await db.query(`
         SELECT username,
                password,
-               fname,
+               name,
                email,
                dob,
                photo,
@@ -122,7 +122,7 @@ class User {
   static async getAll() {
     const result = await db.query(`
         SELECT username,
-               fname,
+               name,
                email,
                photo,
                zip,
@@ -140,7 +140,7 @@ class User {
   static async get(username) {
     const userRes = await db.query(`
         SELECT username,
-               fname,
+               name,
                email,
                photo,
                zip,
