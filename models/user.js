@@ -1,4 +1,3 @@
-// TODO: MAKE SURE USERNAME + MORE ? GOES IN DB LOWERCASE
 // TODO: NOT SURE WHY RADIUS IS DEFAULTING TO 0 IF LEFT EMPTY
 
 "use strict";
@@ -132,7 +131,8 @@ class User {
                latlng,
                radius,
                bio
-        FROM users`,
+        FROM users
+        ORDER BY RANDOM()`,
     );
 
     return result.rows;
