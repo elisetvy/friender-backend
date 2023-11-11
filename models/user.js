@@ -1,5 +1,4 @@
 // TODO: MAKE SURE USERNAME + MORE ? GOES IN DB LOWERCASE
-// TODO: LOWERCASE USERNAMES WHEN LOGGING IN ALSO
 // TODO: NOT SURE WHY RADIUS IS DEFAULTING TO 0 IF LEFT EMPTY
 
 "use strict";
@@ -35,7 +34,7 @@ class User {
     const duplicateCheck = await db.query(`
       SELECT username
       FROM users
-      WHERE username = $1`, [username],
+      WHERE username = $1`, [username.toLowerCase()],
     );
 
     if (duplicateCheck.rows.length > 0) {
@@ -75,10 +74,10 @@ class User {
                     latlng,
                     radius,
                     bio`, [
-      username,
+      username.toLowerCase(),
       hashedPassword,
-      fname,
-      email,
+      fname.toLowerCase(),
+      email.toLowerCase(),
       dob,
       photo,
       zip,
@@ -107,7 +106,7 @@ class User {
                radius,
                bio
         FROM users
-        WHERE username = $1`, [username]
+        WHERE username = $1`, [username.toLowerCase()]
     );
 
     const user = result.rows[0];
@@ -133,8 +132,7 @@ class User {
                latlng,
                radius,
                bio
-        FROM users
-        ORDER BY username`,
+        FROM users`,
     );
 
     return result.rows;
