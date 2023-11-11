@@ -29,7 +29,7 @@ const DEFAULT_RADIUS = 25;
 class User {
 
   static async register(
-    { username, password, fname, lname, email, dob, photo=DEFAULT_PHOTO, zip, radius,
+    { username, password, fname, email, dob, photo=DEFAULT_PHOTO, zip, radius,
       bio }) {
 
     const duplicateCheck = await db.query(`
@@ -57,7 +57,6 @@ class User {
                 (username,
                  password,
                  fname,
-                 lname,
                  email,
                  dob,
                  photo,
@@ -65,11 +64,10 @@ class User {
                  latlng,
                  radius,
                  bio)
-                VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
+                VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
                 RETURNING
                     username,
                     fname,
-                    lname,
                     email,
                     dob,
                     photo,
@@ -80,7 +78,6 @@ class User {
       username,
       hashedPassword,
       fname,
-      lname,
       email,
       dob,
       photo,
@@ -102,7 +99,6 @@ class User {
         SELECT username,
                password,
                fname,
-               lname,
                email,
                dob,
                photo,
@@ -131,7 +127,6 @@ class User {
     const result = await db.query(`
         SELECT username,
                fname,
-               lname,
                email,
                photo,
                zip,
@@ -150,7 +145,6 @@ class User {
     const userRes = await db.query(`
         SELECT username,
                fname,
-               lname,
                email,
                photo,
                zip,
