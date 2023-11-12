@@ -25,7 +25,7 @@ const DEFAULT_RADIUS = 25;
 class User {
 
   static async register(
-    { username, password, fname, email, dob, photo=DEFAULT_PHOTO, zip, radius,
+    { username, password, name, email, dob, photo=DEFAULT_PHOTO, zip, radius,
       bio }) {
 
     const duplicateCheck = await db.query(`
