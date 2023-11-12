@@ -14,7 +14,7 @@ const cors = require("cors");
 app.use(cors());
 app.use(express.json());
 
-app.use("/auth", usersRoutes);
+app.use("/auth", authRoutes);
 app.use("/users", usersRoutes);
 app.use("/messages", messagesRoutes);
 
