@@ -5,6 +5,7 @@ const app = express();
 
 const authRoutes = require("./routes/auth");
 const usersRoutes = require("./routes/users");
+const messagesRoutes = require("./routes/messages");
 
 const { NotFoundError } = require("./expressError");
 
@@ -13,8 +14,9 @@ const cors = require("cors");
 app.use(cors());
 app.use(express.json());
 
-app.use("/users", usersRoutes);
 app.use("/auth", usersRoutes);
+app.use("/users", usersRoutes);
+app.use("/messages", messagesRoutes);
 
 /** Handle 404 errors -- this matches everything */
 app.use(function (req, res, next) {
