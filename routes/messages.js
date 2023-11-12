@@ -22,7 +22,7 @@ router.post("/", async function(req, res, next) {
 router.get("/:u1/:u2", async function(req, res, next) {
   const { u1, u2 } = req.params;
 
-  const messages = await Message.get(u2, u2);
+  const messages = await Message.get({ u1, u2 });
 
   return res.json({ messages })
 });

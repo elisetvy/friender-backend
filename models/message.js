@@ -32,8 +32,8 @@ class Message {
                 timestamp
           FROM messages
           WHERE (sender = $1 AND receiver = $2) OR (sender = $2 AND receiver = $1)
-          ORDER BY timestamp DESC`,
-    [u1. u2]);
+          ORDER BY timestamp ASC`,
+    [u1, u2]);
 
     const messages = result.rows;
 
