@@ -16,7 +16,7 @@ class Message {
                                  body)
              VALUES
                ($1, $2, $3)
-             RETURNING sender, receiver, body, timestamp`,
+             RETURNING id, sender, receiver, body, timestamp`,
         [sender, receiver, body]);
 
     return result.rows[0];
@@ -26,7 +26,8 @@ class Message {
 
   static async get({ u1, u2 }) {
     const result = await db.query(
-          `SELECT sender,
+          `SELECT id,
+                sender,
                 receiver,
                 body,
                 timestamp
