@@ -65,7 +65,7 @@ class Message {
           ORDER BY username, timestamp DESC`,
     [username]);
 
-    const messages = result.rows;
+    const messages = result.rows.sort((a, b) => b.timestamp - a.timestamp);
 
     if (!messages) throw new NotFoundError(`${username} doesn't have any messages`);
 
