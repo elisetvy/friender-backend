@@ -1,7 +1,7 @@
 CREATE TABLE users (
-  username VARCHAR(20) PRIMARY KEY,
-  password VARCHAR(100) NOT NULL,
-  name VARCHAR(20) NOT NULL,
+  username VARCHAR(30) PRIMARY KEY,
+  password VARCHAR(50) NOT NULL,
+  name VARCHAR(50) NOT NULL,
   email VARCHAR(50) NOT NULL UNIQUE
     CHECK (position('@' IN email) > 1),
   dob VARCHAR(10) NOT NULL,

@@ -1,0 +1,61 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "$id": "http://example.com/example.json",
+    "type": "object",
+    "properties": {
+      "username": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 30
+      },
+      "password": {
+        "type": "string",
+        "minLength": 5,
+        "maxLength": 50
+      },
+      "name": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 50
+      },
+      "email": {
+        "type": "string",
+        "minLength": 5,
+        "maxLength": 50,
+        "format": "email"
+      },
+      "dob": {
+        "type": "string",
+        "format": "date"
+      },
+      "photo": {
+        "type": "string",
+        "minLength": 5,
+        "maxLength": 100
+      },
+      "zip": {
+        "type": "string",
+        "minLength": 5,
+        "maxLength": 5
+      },
+      "radius": {
+        "type": "integer",
+        "minLength": 5,
+        "maxLength": 5
+      },
+      "bio": {
+        "type": "string"
+      }
+    },
+    "additionalProperties": false,
+    "required": [
+      "username",
+      "password",
+      "name",
+      "email",
+      "dob",
+      "photo",
+      "zip",
+      "radius"
+    ]
+  }
