@@ -33,12 +33,41 @@ class Message {
                 timestamp
           FROM messages
           WHERE (sender = $1 AND receiver = $2) OR (sender = $2 AND receiver = $1)
-          ORDER BY timestamp DESC`,
+          ORDER BY timestamp ASC`,
     [u1, u2]);
 
     const messages = result.rows;
 
     if (!messages) throw new NotFoundError(`No messages between ${u1} and ${u2}.`);
+
+    return messages;
+  }
+
+  /** Get user's messages.
+   *
+   * If sender is $1, then username is receiver.
+   * If receiver is $1, then username is sender.
+   *
+  */
+
+  static async getUserMessages(username) {
+    const result = await db.query(
+          `SELECT DISTINCT ON (username)
+                CASE
+                    WHEN sender = $1 THEN receiver
+                    WHEN receiver = $1 THEN sender
+                END AS username,
+                id,
+                timestamp,
+                body
+          FROM messages
+          WHERE sender = $1 OR receiver = $1
+          ORDER BY username, timestamp DESC`,
+    [username]);
+
+    const messages = result.rows;
+
+    if (!messages) throw new NotFoundError(`${username} doesn't have any messages`);
 
     return messages;
   }

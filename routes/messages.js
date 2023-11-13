@@ -27,4 +27,14 @@ router.get("/:u1/:u2", async function(req, res, next) {
   return res.json({ messages })
 });
 
+/** Get a user's messages. */
+
+router.get("/:username", async function(req, res, next) {
+  const { username } = req.params;
+
+  const messages = await Message.getUserMessages(username);
+
+  return res.json({ messages })
+});
+
 module.exports = router;
