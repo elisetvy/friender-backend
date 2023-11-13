@@ -2,6 +2,10 @@
 
 /** Routes for authentication. */
 
+const jsonschema = require("jsonschema");
+const userAuthSchema = require("../schemas/userAuth.json");
+const userRegisterSchema = require("../schemas/userNew.json");
+
 const User = require("../models/user");
 const express = require("express");
 const router = new express.Router();
@@ -13,17 +17,23 @@ const upload = multer();
 /** Register user. */
 router.post("/register", upload.single('file'), async (req, res, next) => {
   const userData = JSON.parse(JSON.stringify(req.body));
+  userData.radius = +userData.radius;
 
-  let user;
+  if (req.file) userData.photo = await User.handlePhoto(req.file);
 
-  if (req.file) {
-    const imageUrl = await User.handlePhoto(req.file);
-    userData.photo = imageUrl;
+  const validator = jsonschema.validate(
+    userData,
+    userRegisterSchema,
+    {required: true}
+    );
 
-    user = await User.register(userData);
-  } else {
-    user = await User.register(userData);
-  }
+    if (!validator.valid) {
+      const errs = validator.errors.map(e => e.stack);
+      throw new BadRequestError(errs);
+    }
+
+  const user = await User.register(userData);
+  console.log(user, "USER AFTER DB IS")
 
   const token = createToken(user)
 
@@ -32,6 +42,16 @@ router.post("/register", upload.single('file'), async (req, res, next) => {
 
 
 router.post("/login",  async (req, res, next) => {
+  const validator = jsonschema.validate(
+    req.body,
+    userAuthSchema,
+    {required: true}
+  );
+
+  if (!validator.valid) {
+    const errs = validator.errors.map(e => e.stack);
+    throw new BadRequestError(errs);
+  }
   const user = await User.authenticate(req.body);
   const token = createToken(user);
 
