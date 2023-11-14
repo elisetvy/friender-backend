@@ -21,13 +21,10 @@ const {
   UnauthorizedError,
 } = require("../expressError");
 
-const DEFAULT_PHOTO = 'https://i.pinimg.com/originals/33/70/29/33702949116bc77168dd93bdecc9f955.png';
-const DEFAULT_RADIUS = 25;
-
 class User {
 
   static async register(
-    { username, password, name, email, dob, photo=DEFAULT_PHOTO, zip, radius,
+    { username, password, name, email, dob, photo, zip, radius,
       bio }) {
 
     const duplicateCheck = await db.query(`
@@ -37,18 +34,14 @@ class User {
     );
 
     if (duplicateCheck.rows.length > 0) {
-      throw new BadRequestError(`Duplicate username: ${username}`);
+      throw new BadRequestError(`User already exists: ${username}`);
     }
 
     const hashedPassword = await bcrypt.hash(password, BCRYPT_WORK_FACTOR);
 
     const latlng = await convertZip(zip);
 
-    if (radius < 1) {
-      radius = DEFAULT_RADIUS;
-    }
-
-    if (calculateAge(dob) < 18) throw new BadRequestError(`Users must be at least 18 years old.`);
+    if (calculateAge(dob) < 18) throw new BadRequestError(`You must be at least 18 years old to register.`);
 
     const result = await db.query(`
                 INSERT INTO users

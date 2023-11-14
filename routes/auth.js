@@ -14,12 +14,15 @@ const { BadRequestError } = require("../expressError");
 const multer = require("multer");
 const upload = multer();
 
+const DEFAULT_PHOTO = 'https://i.pinimg.com/originals/33/70/29/33702949116bc77168dd93bdecc9f955.png';
+
 /** Register user. */
 router.post("/register", upload.single('file'), async (req, res, next) => {
   const userData = JSON.parse(JSON.stringify(req.body));
-  userData.radius = +userData.radius;
 
-  if (req.file) userData.photo = await User.handlePhoto(req.file);
+  userData.radius === "" ? userData.radius = 25 : userData.radius = +userData.radius;
+  req.file ? userData.photo = await User.handlePhoto(req.file) : userData.photo = DEFAULT_PHOTO;
+  delete userData.file;
 
   const validator = jsonschema.validate(
     userData,

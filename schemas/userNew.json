@@ -33,6 +33,11 @@
         "minLength": 5,
         "maxLength": 100
       },
+      "file": {
+        "type": "string",
+        "minLength": 5,
+        "maxLength": 100
+      },
       "zip": {
         "type": "string",
         "minLength": 5,
