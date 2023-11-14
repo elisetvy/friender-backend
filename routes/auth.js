@@ -33,7 +33,6 @@ router.post("/register", upload.single('file'), async (req, res, next) => {
     }
 
   const user = await User.register(userData);
-  console.log(user, "USER AFTER DB IS")
 
   const token = createToken(user)
 
