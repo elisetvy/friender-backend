@@ -36,9 +36,26 @@ function calculateAge(dob) {
   return Math.abs(age_dt.getUTCFullYear() - 1970)
 }
 
+/** Helper for making selective update queries. */
+function sqlForPartialUpdate(data) {
+  const keys = Object.keys(data);
+  if (keys.length === 0) throw new BadRequestError("No data");
+
+  // {firstName: 'Aliya', age: 32} => ['"first_name"=$1', '"age"=$2']
+  const cols = keys.map((col, idx) =>
+      `"${col}"=$${idx + 1}`,
+  );
+
+  return {
+    setCols: cols.join(", "),
+    values: Object.values(data),
+  };
+}
+
 module.exports = {
   convertZip,
   getDistance,
   checkRadius,
   calculateAge,
+  sqlForPartialUpdate,
 };

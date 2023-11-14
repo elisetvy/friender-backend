@@ -8,6 +8,11 @@
         "minLength": 1,
         "maxLength": 30
       },
+      "password": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 30
+      },
       "name": {
         "type": "string",
         "minLength": 1,

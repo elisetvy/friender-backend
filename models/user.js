@@ -7,6 +7,8 @@ const db = require("../db");
 const bcrypt = require("bcrypt");
 const { BCRYPT_WORK_FACTOR } = require("../config.js");
 
+const { sqlForPartialUpdate } = require("../utils");
+
 const { PutObjectCommand, S3Client } = require("@aws-sdk/client-s3");
 const client = new S3Client({ region: process.env.BUCKET_REGION });
 const uuid = require("uuid");
@@ -157,6 +159,38 @@ class User {
 
     if (!user) throw new NotFoundError(`No user: ${username}`);
 
+    return user;
+  }
+
+  /** Update user info */
+  static async update(username, data) {
+    if (data.password) {
+      data.password = await bcrypt.hash(data.password, BCRYPT_WORK_FACTOR);
+    }
+
+    const { setCols, values } = sqlForPartialUpdate(data);
+
+    const usernameIdx = "$" + (values.length + 1);
+
+    const q = `
+        UPDATE users
+        SET ${setCols}
+        WHERE username = ${usernameIdx}
+        RETURNING username,
+                  name,
+                  email,
+                  dob,
+                  photo,
+                  zip,
+                  latlng,
+                  radius,
+                  bio`;
+    const result = await db.query(q, [...values, username]);
+    const user = result.rows[0];
+
+    if (!user) throw new NotFoundError(`No user: ${username}`);
+
+    // delete user.password; TODO: need?
     return user;
   }
 
