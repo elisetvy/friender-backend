@@ -11,7 +11,7 @@ const { PutObjectCommand, S3Client } = require("@aws-sdk/client-s3");
 const client = new S3Client({ region: process.env.BUCKET_REGION });
 const uuid = require("uuid");
 
-const { convertZip } = require("../utils");
+const { convertZip, calculateAge } = require("../utils");
 
 const {
   NotFoundError,
@@ -46,7 +46,7 @@ class User {
       radius = DEFAULT_RADIUS;
     }
 
-    // TODO: CHECK AGE BEFORE INSERT INTO DB
+    if (calculateAge(dob) < 18) throw new BadRequestError(`Users must be at least 18 years old.`);
 
     const result = await db.query(`
                 INSERT INTO users
