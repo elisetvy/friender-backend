@@ -134,7 +134,7 @@ class User {
 
   /** Given a username, return data about user. */
   static async get(username) {
-    const userRes = await db.query(`
+    const result = await db.query(`
         SELECT username,
                name,
                email,
@@ -148,7 +148,7 @@ class User {
         WHERE username = $1`, [username],
     );
 
-    const user = userRes.rows[0];
+    const user = result.rows[0];
 
     if (!user) throw new NotFoundError(`No user: ${username}`);
 
@@ -157,6 +157,10 @@ class User {
 
   /** Update user info */
   static async update(username, data) {
+    const latlng = await convertZip(data.zip);
+
+    data.latlng = latlng;
+
     if (data.password) {
       data.password = await bcrypt.hash(data.password, BCRYPT_WORK_FACTOR);
     }
