@@ -156,9 +156,13 @@ class User {
 
   /** Update user info */
   static async update(username, data) {
-    const latlng = await convertZip(data.zip);
+    if (data.zip) {
+      data.latlng = await convertZip(data.zip);
+    }
 
-    data.latlng = latlng;
+    if (data.password) {
+      data.password = await bcrypt.hash(data.password, BCRYPT_WORK_FACTOR);
+    }
 
     const { setCols, values } = sqlForPartialUpdate(data);
 

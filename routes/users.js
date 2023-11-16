@@ -36,6 +36,15 @@ router.get("/:username", async function (req, res, next) {
 router.patch("/:username", async function (req, res, next) {
   await User.authenticate({ username: req.params.username, password: req.body.password });
 
+  if (req.body.newPassword) {
+    req.body.password = req.body.newPassword;
+    delete req.body.newPassword;
+
+    const user = await User.update(req.params.username, req.body);
+
+    return res.json({ user });
+  }
+
   req.body.radius === "" ? req.body.radius = 25 : req.body.radius = +req.body.radius;
 
   const validator = jsonschema.validate(
