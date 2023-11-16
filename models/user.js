@@ -85,7 +85,6 @@ class User {
   }
 
   static async authenticate({ username, password }) {
-
     const result = await db.query(`
         SELECT username,
                password,
@@ -160,10 +159,6 @@ class User {
     const latlng = await convertZip(data.zip);
 
     data.latlng = latlng;
-
-    if (data.password) {
-      data.password = await bcrypt.hash(data.password, BCRYPT_WORK_FACTOR);
-    }
 
     const { setCols, values } = sqlForPartialUpdate(data);
 

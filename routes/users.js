@@ -10,7 +10,7 @@ const multer = require("multer");
 const upload = multer();
 
 const User = require("../models/user");
-const { BadRequestError } = require("../expressError");
+const { BadRequestError, UnauthorizedError } = require("../expressError");
 
 /** Upload file to S3 bucket and return image URL. */
 router.post("/upload", upload.single('file'), async (req, res, next) => {
@@ -34,6 +34,8 @@ router.get("/:username", async function (req, res, next) {
 
 /** Update a user. */
 router.patch("/:username", async function (req, res, next) {
+  await User.authenticate({ username: req.params.username, password: req.body.password });
+
   req.body.radius === "" ? req.body.radius = 25 : req.body.radius = +req.body.radius;
 
   const validator = jsonschema.validate(
@@ -47,7 +49,10 @@ router.patch("/:username", async function (req, res, next) {
     throw new BadRequestError(errs);
   }
 
+  delete req.body.password;
+
   const user = await User.update(req.params.username, req.body);
+
   return res.json({ user });
 });
 
