@@ -1,3 +1,10 @@
+-- pinky
+-- brain
+-- yzma
+-- kirk
+-- michael (of tien and michael)
+-- theresa
+
 INSERT INTO users (username, password, name, email, dob, photo, zip, latlng, radius, bio)
 VALUES ('snooba',
         '$2b$12$kqxU1kB58bb4q05U0wAuD.akGDdAJSozxQTrAQsYS.sasz5Ph/TdK',

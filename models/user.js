@@ -111,7 +111,7 @@ class User {
       }
     }
 
-    throw new UnauthorizedError("Invalid Username/Password");
+    throw new UnauthorizedError("Invalid username/password");
   }
 
   static async getAll() {

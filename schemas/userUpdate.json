@@ -35,9 +35,7 @@
         "maxLength": 5
       },
       "radius": {
-        "type": "integer",
-        "minLength": 5,
-        "maxLength": 5
+        "type": "number"
       },
       "bio": {
         "type": "string"

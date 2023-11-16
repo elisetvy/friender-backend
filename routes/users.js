@@ -34,6 +34,8 @@ router.get("/:username", async function (req, res, next) {
 
 /** Update a user. */
 router.patch("/:username", async function (req, res, next) {
+  req.body.radius === "" ? req.body.radius = 25 : req.body.radius = +req.body.radius;
+
   const validator = jsonschema.validate(
       req.body,
       userUpdateSchema,
