@@ -158,12 +158,12 @@ class User {
 
   /** Update user info. */
   static async update(username, data) {
-    // Ensure credentials are valid
+    // If updating password, hash new password
     if (data.password) {
       data.password = await bcrypt.hash(data.password, BCRYPT_WORK_FACTOR);
     }
 
-    // If ZIP is being changed, also add latlng to update
+    // If updating ZIP, also update latlng
     if (data.zip) {
       data.latlng = await convertZip(data.zip);
     }
