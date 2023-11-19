@@ -25,8 +25,9 @@ afterAll(commonAfterAll);
 /** Authenticate. */
 
 describe("authenticate", function () {
-  test("works", async function () {
+  test("valid credentials return user", async function () {
     const user = await User.authenticate({ username: "u1", password: "password"});
+
     expect(user).toEqual({
       username: "u1",
       name: "u1",
@@ -40,77 +41,85 @@ describe("authenticate", function () {
     });
   });
 
-  // test("unauth if no such user", async function () {
-  //   try {
-  //     await User.authenticate("u3", "password");
-  //     throw new Error("fail test, you shouldn't get here");
-  //   } catch (err) {
-  //     expect(err instanceof UnauthorizedError).toBeTruthy();
-  //   }
-  // });
+  test("no such user returns unauth error", async function () {
+    try {
+      await User.authenticate({ username: "u3", password: "password" });
+    } catch (err) {
+      expect(err instanceof UnauthorizedError).toBeTruthy();
+    }
+  });
 
-  // test("unauth if wrong password", async function () {
-  //   try {
-  //     await User.authenticate("c1", "wrong");
-  //     throw new Error("fail test, you shouldn't get here");
-  //   } catch (err) {
-  //     expect(err instanceof UnauthorizedError).toBeTruthy();
-  //   }
-  // });
+  test("wrong password returns unauth error", async function () {
+    try {
+      await User.authenticate({ username: "u1", password: "wrong"});
+    } catch (err) {
+      expect(err instanceof UnauthorizedError).toBeTruthy();
+    }
+  });
 });
 
-// /************************************** register */
+/** Register. */
 
-// describe("register", function () {
-//   const newUser = {
-//     username: "new",
-//     firstName: "Test",
-//     lastName: "Tester",
-//     email: "test@test.com",
-//     isAdmin: false,
-//   };
+describe("register", function () {
+  const u3 = {
+    username: "u3",
+    name: "u3",
+    email: "u3@email.com",
+    dob: "1994-04-17",
+    photo: 'https://colossal.com/wp-content/uploads/dodo-Header-blog.jpg',
+    zip: '90802',
+    latlng: '33.76672,-118.1924',
+    radius: 5000,
+    bio: "meow",
+  };
 
-//   test("works", async function () {
-//     let user = await User.register({
-//       ...newUser,
-//       password: "password",
-//     });
-//     expect(user).toEqual(newUser);
-//     const found = await db.query("SELECT * FROM users WHERE username = 'new'");
-//     expect(found.rows.length).toEqual(1);
-//     expect(found.rows[0].is_admin).toEqual(false);
-//     expect(found.rows[0].password.startsWith("$2b$")).toEqual(true);
-//   });
+  test("valid data returns user", async function () {
+    let user = await User.register({
+      ...u3,
+      password: "password",
+    });
 
-//   test("works: adds admin", async function () {
-//     let user = await User.register({
-//       ...newUser,
-//       password: "password",
-//       isAdmin: true,
-//     });
-//     expect(user).toEqual({ ...newUser, isAdmin: true });
-//     const found = await db.query("SELECT * FROM users WHERE username = 'new'");
-//     expect(found.rows.length).toEqual(1);
-//     expect(found.rows[0].is_admin).toEqual(true);
-//     expect(found.rows[0].password.startsWith("$2b$")).toEqual(true);
-//   });
+    expect(user).toEqual(u3);
 
-//   test("bad request with dup data", async function () {
-//     try {
-//       await User.register({
-//         ...newUser,
-//         password: "password",
-//       });
-//       await User.register({
-//         ...newUser,
-//         password: "password",
-//       });
-//       throw new Error("fail test, you shouldn't get here");
-//     } catch (err) {
-//       expect(err instanceof BadRequestError).toBeTruthy();
-//     }
-//   });
-// });
+    const found = await db.query("SELECT * FROM users WHERE username = 'u3'");
+    expect(found.rows.length).toEqual(1);
+    expect(found.rows[0].password.startsWith("$2b$")).toEqual(true);
+  });
+
+  test("dupe data returns bad request error", async function () {
+    try {
+      await User.register({
+        ...u3,
+        password: "password",
+      });
+      await User.register({
+        ...u3,
+        password: "password",
+      });
+    } catch (err) {
+      expect(err instanceof BadRequestError).toBeTruthy();
+    }
+  });
+
+  test("underage user returns bad request error", async function () {
+    try {
+      await User.register({
+        username: "u3",
+        password: "password",
+        name: "u3",
+        email: "u3@email.com",
+        dob: "2014-04-17",
+        photo: 'https://colossal.com/wp-content/uploads/dodo-Header-blog.jpg',
+        zip: '90802',
+        latlng: '33.76672,-118.1924',
+        radius: 5000,
+        bio: "meow",
+      });
+    } catch (err) {
+      expect(err instanceof BadRequestError).toBeTruthy();
+    }
+  });
+});
 
 // /************************************** findAll */
 
