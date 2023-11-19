@@ -133,7 +133,7 @@ class User {
     return result.rows;
   }
 
-  /** Given a username, return data about user. */
+  /** Get a user by username. */
   static async get(username) {
     const result = await db.query(`
                 SELECT username,

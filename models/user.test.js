@@ -121,110 +121,128 @@ describe("register", function () {
   });
 });
 
-// /************************************** findAll */
+/** Get all. */
 
-// describe("findAll", function () {
-//   test("works", async function () {
-//     const users = await User.findAll();
-//     expect(users).toEqual([
-//       {
-//         username: "u1",
-//         firstName: "U1F",
-//         lastName: "U1L",
-//         email: "u1@email.com",
-//         isAdmin: false,
-//       },
-//       {
-//         username: "u2",
-//         firstName: "U2F",
-//         lastName: "U2L",
-//         email: "u2@email.com",
-//         isAdmin: false,
-//       },
-//     ]);
-//   });
-// });
+describe("getAll", function () {
+  test("returns all users", async function () {
+    const users = await User.getAll();
 
-// /************************************** get */
+    expect(users).toEqual([
+      {
+        username: "u1",
+        name: "u1",
+        email: "u1@email.com",
+        dob: "2001-06-13",
+        photo: 'https://media.istockphoto.com/id/155353122/photo/breaded-cat.jpg?s=612x612&w=0&k=20&c=T0xVGbkZIxHm1syWFx_5VxD5AeoTqMJtC8sBa3MDo-Y=',
+        zip: '92704',
+        latlng: '33.74465,-117.93119',
+        radius: 25,
+        bio: null,
+      },
+      {
+        username: "u2",
+        name: "u2",
+        email: "u2@email.com",
+        dob: "1993-09-17",
+        photo: 'https://i.pinimg.com/736x/24/1f/49/241f49ca612ef379a78fdcf7b8471ada.jpg',
+        zip: '90802',
+        latlng: '33.76672,-118.1924',
+        radius: 2000,
+        bio: null,
+      },
+    ]);
+  });
+});
 
-// describe("get", function () {
-//   test("works", async function () {
-//     let user = await User.get("u1");
-//     expect(user).toEqual({
-//       username: "u1",
-//       firstName: "U1F",
-//       lastName: "U1L",
-//       email: "u1@email.com",
-//       isAdmin: false,
-//       applications: [testJobIds[0]],
-//     });
-//   });
+/** Get. */
 
-//   test("not found if no such user", async function () {
-//     try {
-//       await User.get("nope");
-//       throw new Error("fail test, you shouldn't get here");
-//     } catch (err) {
-//       expect(err instanceof NotFoundError).toBeTruthy();
-//     }
-//   });
-// });
+describe("get", function () {
+  test("valid username returns user", async function () {
+    let user = await User.get("u1");
 
-// /************************************** update */
+    expect(user).toEqual({
+      username: "u1",
+      name: "u1",
+      email: "u1@email.com",
+      dob: "2001-06-13",
+      photo: 'https://media.istockphoto.com/id/155353122/photo/breaded-cat.jpg?s=612x612&w=0&k=20&c=T0xVGbkZIxHm1syWFx_5VxD5AeoTqMJtC8sBa3MDo-Y=',
+      zip: '92704',
+      latlng: '33.74465,-117.93119',
+      radius: 25,
+      bio: null,
+    });
+  });
 
-// describe("update", function () {
-//   const updateData = {
-//     firstName: "NewF",
-//     lastName: "NewF",
-//     email: "new@email.com",
-//     isAdmin: true,
-//   };
+  test("invalid username returns not found error", async function () {
+    try {
+      await User.get("u3");
+    } catch (err) {
+      expect(err instanceof NotFoundError).toBeTruthy();
+    }
+  });
+});
 
-//   test("works", async function () {
-//     let job = await User.update("u1", updateData);
-//     expect(job).toEqual({
-//       username: "u1",
-//       ...updateData,
-//     });
-//   });
+/** Update */
 
-//   test("works: set password", async function () {
-//     let job = await User.update("u1", {
-//       password: "new",
-//     });
-//     expect(job).toEqual({
-//       username: "u1",
-//       firstName: "U1F",
-//       lastName: "U1L",
-//       email: "u1@email.com",
-//       isAdmin: false,
-//     });
-//     const found = await db.query("SELECT * FROM users WHERE username = 'u1'");
-//     expect(found.rows.length).toEqual(1);
-//     expect(found.rows[0].password.startsWith("$2b$")).toEqual(true);
-//   });
+describe("update", function () {
+  const updateData = {
+    name: "u3",
+    email: "u3@email.com",
+  };
 
-//   test("not found if no such user", async function () {
-//     try {
-//       await User.update("nope", {
-//         firstName: "test",
-//       });
-//       throw new Error("fail test, you shouldn't get here");
-//     } catch (err) {
-//       expect(err instanceof NotFoundError).toBeTruthy();
-//     }
-//   });
+  test("valid data returns updated user", async function () {
+    let user = await User.update("u1", updateData);
 
-//   test("bad request if no data", async function () {
-//     expect.assertions(1);
-//     try {
-//       await User.update("c1", {});
-//       throw new Error("fail test, you shouldn't get here");
-//     } catch (err) {
-//       expect(err instanceof BadRequestError).toBeTruthy();
-//     }
-//   });
-// });
+    expect(user).toEqual({
+      username: "u1",
+      name: "u3",
+      email: "u3@email.com",
+      dob: "2001-06-13",
+      photo: 'https://media.istockphoto.com/id/155353122/photo/breaded-cat.jpg?s=612x612&w=0&k=20&c=T0xVGbkZIxHm1syWFx_5VxD5AeoTqMJtC8sBa3MDo-Y=',
+      zip: '92704',
+      latlng: '33.74465,-117.93119',
+      radius: 25,
+      bio: null,
+    });
+  });
+
+  // test("works: set password", async function () {
+  //   let job = await User.update("u1", {
+  //     password: "new",
+  //   });
+  //   expect(job).toEqual({
+  //     username: "u1",
+  //     firstName: "U1F",
+  //     lastName: "U1L",
+  //     email: "u1@email.com",
+  //     isAdmin: false,
+  //   });
+  //   const found = await db.query("SELECT * FROM users WHERE username = 'u1'");
+  //   expect(found.rows.length).toEqual(1);
+  //   expect(found.rows[0].password.startsWith("$2b$")).toEqual(true);
+  // });
+
+  // test("not found if no such user", async function () {
+  //   try {
+  //     await User.update("nope", {
+  //       firstName: "test",
+  //     });
+  //     throw new Error("fail test, you shouldn't get here");
+  //   } catch (err) {
+  //     expect(err instanceof NotFoundError).toBeTruthy();
+  //   }
+  // });
+
+  // test("bad request if no data", async function () {
+  //   expect.assertions(1);
+  //   try {
+  //     await User.update("c1", {});
+  //     throw new Error("fail test, you shouldn't get here");
+  //   } catch (err) {
+  //     expect(err instanceof BadRequestError).toBeTruthy();
+  //   }
+  // });
+});
 
 // /************************************** remove */
 
