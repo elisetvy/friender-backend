@@ -1,12 +1,15 @@
 "use strict";
 
+/** Messages routes. */
+
 const Router = require("express").Router;
 const router = new Router();
-const { UnauthorizedError, BadRequestError } = require("../expressError");
+
 const Message = require("../models/message");
 
-/** Send a message. */
+const { UnauthorizedError, BadRequestError } = require("../expressError");
 
+/** Send a message. */
 router.post("/", async function(req, res, next) {
   if (!req.body) throw new BadRequestError();
 
@@ -18,7 +21,6 @@ router.post("/", async function(req, res, next) {
 });
 
 /** Get messages between users. */
-
 router.get("/:u1/:u2", async function(req, res, next) {
   const { u1, u2 } = req.params;
 
@@ -28,7 +30,6 @@ router.get("/:u1/:u2", async function(req, res, next) {
 });
 
 /** Get a user's messages. */
-
 router.get("/:username", async function(req, res, next) {
   const { username } = req.params;
 

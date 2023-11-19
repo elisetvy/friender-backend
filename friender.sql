@@ -1,3 +1,5 @@
+-- Delete and recreate friender and friender_test databases.
+
 \echo 'Delete and recreate friender db?'
 \prompt 'Return for yes or control-C to cancel > ' foo
 

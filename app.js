@@ -3,20 +3,22 @@ require("dotenv").config();
 const express = require("express");
 const app = express();
 
+/** Middleware that allows cross origin requests. */
+const cors = require("cors");
+app.use(cors());
+
+/** Middleware that parses JSON and makes it available at request.body. */
+app.use(express.json());
+
 const authRoutes = require("./routes/auth");
 const usersRoutes = require("./routes/users");
 const messagesRoutes = require("./routes/messages");
 
-const { NotFoundError } = require("./expressError");
-
-const cors = require("cors");
-
-app.use(cors());
-app.use(express.json());
-
 app.use("/auth", authRoutes);
 app.use("/users", usersRoutes);
 app.use("/messages", messagesRoutes);
+
+const { NotFoundError } = require("./expressError");
 
 /** Handle 404 errors -- this matches everything */
 app.use(function (req, res, next) {

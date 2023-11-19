@@ -1,3 +1,5 @@
+-- Seed database with users in different locations.
+
 -- pinky
 -- brain
 -- yzma

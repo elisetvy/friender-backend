@@ -1,3 +1,5 @@
+-- Schema for tables in friender and friender_test databases.
+
 CREATE TABLE users (
   username VARCHAR(30) PRIMARY KEY,
   password VARCHAR(50) NOT NULL,
