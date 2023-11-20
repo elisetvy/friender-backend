@@ -35,7 +35,7 @@ async function commonBeforeAll() {
                            body,
                            timestamp)
       VALUES (1, 'u1', 'u2', 'hi u2', '2023-11-11 23:11:17.219203-08'),
-             (2, 'u2', 'u1', 'hi u1', '2023-11-11 23:11:17.219203-08')
+             (2, 'u2', 'u1', 'hi u1', '2023-11-12 23:11:17.219203-08')
       RETURNING body`);
 }
 

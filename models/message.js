@@ -53,7 +53,7 @@ class Message {
     return messages;
   }
 
-  /** Get user's messages.
+  /** Get a user's messages.
    *
    * If user is sender, return receiver.
    * If user is receiver, return sender.
@@ -75,6 +75,7 @@ class Message {
                 ORDER BY username, timestamp DESC`,[username]
     );
 
+    // Sort messages by most recent
     const messages = result.rows.sort((a, b) => b.timestamp - a.timestamp);
 
     if (!messages) throw new NotFoundError(`${username} doesn't have any messages`);
