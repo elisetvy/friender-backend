@@ -125,8 +125,8 @@ describe("getAll", function () {
     const users = await User.getAll();
 
     expect(users.length).toEqual(2);
-    expect(["u1", "u2"]).toContain(users[1].username);
     expect(["u1", "u2"]).toContain(users[0].username);
+    expect(["u1", "u2"]).toContain(users[1].username);
   });
 });
 

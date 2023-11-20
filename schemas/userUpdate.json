@@ -27,7 +27,7 @@
       "photo": {
         "type": "string",
         "minLength": 5,
-        "maxLength": 100
+        "maxLength": 200
       },
       "zip": {
         "type": "string",
@@ -42,5 +42,7 @@
       }
     },
     "additionalProperties": false,
-    "required": []
+    "required": [
+      "password"
+    ]
   }

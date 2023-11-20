@@ -16,7 +16,7 @@ beforeEach(commonBeforeEach);
 afterEach(commonAfterEach);
 afterAll(commonAfterAll);
 
-/** Register. */
+/** POST /auth/register. */
 describe("POST /auth/register", function () {
   test("valid data returns token", async function () {
     const resp = await request(app)
@@ -32,6 +32,7 @@ describe("POST /auth/register", function () {
           radius: 5000,
           bio: "meow",
         });
+
     expect(resp.body).toEqual({
       "token": expect.any(String),
     });
@@ -50,6 +51,7 @@ describe("POST /auth/register", function () {
           zip: '90802',
           radius: 5000,
         });
+
     expect(resp.body).toEqual({
       "token": expect.any(String),
     });
@@ -62,6 +64,7 @@ describe("POST /auth/register", function () {
           username: "u3",
           password: "password",
         });
+
     expect(resp.statusCode).toEqual(400);
   });
 
@@ -72,11 +75,12 @@ describe("POST /auth/register", function () {
           username: 123,
           password: 567,
         });
+
     expect(resp.statusCode).toEqual(400);
   });
 });
 
-/** Log in. */
+/** POST /auth/login. */
 describe("POST /auth/login", function () {
   test("valid data returns token", async function () {
     const resp = await request(app)
@@ -85,6 +89,7 @@ describe("POST /auth/login", function () {
           username: "u1",
           password: "password"
         });
+
     expect(resp.body).toEqual({
       "token": expect.any(String),
     });
@@ -96,6 +101,7 @@ describe("POST /auth/login", function () {
         .send({
           username: "u1"
         });
+
     expect(resp.statusCode).toEqual(400);
   });
 
@@ -106,6 +112,7 @@ describe("POST /auth/login", function () {
           username: "u1",
           password: "wrong"
         });
+
     expect(resp.statusCode).toEqual(401);
   });
 });
