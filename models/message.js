@@ -32,6 +32,8 @@ class Message {
 
   /** Get messages between users. */
   static async get({ u1, u2 }) {
+    // TODO: handle unvalid usernames
+
     const result = await db.query(`
                 SELECT
                     id,

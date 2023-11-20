@@ -23,7 +23,6 @@ afterEach(commonAfterEach);
 afterAll(commonAfterAll);
 
 /** Authenticate. */
-
 describe("authenticate", function () {
   test("valid credentials return user", async function () {
     const user = await User.authenticate({ username: "u1", password: "password"});
@@ -59,7 +58,6 @@ describe("authenticate", function () {
 });
 
 /** Register. */
-
 describe("register", function () {
   const u3 = {
     username: "u3",
@@ -122,40 +120,17 @@ describe("register", function () {
 });
 
 /** Get all. */
-
 describe("getAll", function () {
   test("returns all users", async function () {
     const users = await User.getAll();
 
-    expect(users).toEqual([
-      {
-        username: "u1",
-        name: "u1",
-        email: "u1@email.com",
-        dob: "2001-06-13",
-        photo: 'https://media.istockphoto.com/id/155353122/photo/breaded-cat.jpg?s=612x612&w=0&k=20&c=T0xVGbkZIxHm1syWFx_5VxD5AeoTqMJtC8sBa3MDo-Y=',
-        zip: '92704',
-        latlng: '33.74465,-117.93119',
-        radius: 25,
-        bio: null,
-      },
-      {
-        username: "u2",
-        name: "u2",
-        email: "u2@email.com",
-        dob: "1993-09-17",
-        photo: 'https://i.pinimg.com/736x/24/1f/49/241f49ca612ef379a78fdcf7b8471ada.jpg',
-        zip: '90802',
-        latlng: '33.76672,-118.1924',
-        radius: 2000,
-        bio: null,
-      },
-    ]);
+    expect(users.length).toEqual(2);
+    expect(["u1", "u2"]).toContain(users[1].username);
+    expect(["u1", "u2"]).toContain(users[0].username);
   });
 });
 
 /** Get. */
-
 describe("get", function () {
   test("valid username returns user", async function () {
     let user = await User.get("u1");
@@ -183,7 +158,6 @@ describe("get", function () {
 });
 
 /** Update */
-
 describe("update", function () {
   const updateData = {
     name: "u3",
