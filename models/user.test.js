@@ -157,7 +157,7 @@ describe("get", function () {
   });
 });
 
-/** Update */
+/** Update. */
 describe("update", function () {
   const updateData = {
     name: "u3",
