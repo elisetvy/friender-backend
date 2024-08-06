@@ -24,7 +24,7 @@ const DEFAULT_RADIUS = 25;
 
 /** Register a user. Access photo upload via req.file. */
 router.post("/register", upload.single('file'), async (req, res, next) => {
-  const userData = JSON.parse(JSON.stringify(req.body));
+  const userData = JSON.parse(JSON.stringify(req.body)); // Creates copy of req.body
 
   userData.radius === "" ? userData.radius = DEFAULT_RADIUS : userData.radius = +userData.radius;
 
