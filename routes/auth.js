@@ -20,12 +20,13 @@ const User = require("../models/user");
 const { BadRequestError } = require("../expressError");
 
 const DEFAULT_PHOTO = 'https://i.pinimg.com/originals/33/70/29/33702949116bc77168dd93bdecc9f955.png';
+const DEFAULT_RADIUS = 25;
 
 /** Register a user. Access photo upload via req.file. */
 router.post("/register", upload.single('file'), async (req, res, next) => {
   const userData = JSON.parse(JSON.stringify(req.body));
 
-  userData.radius === "" ? userData.radius = 25 : userData.radius = +userData.radius;
+  userData.radius === "" ? userData.radius = DEFAULT_RADIUS : userData.radius = +userData.radius;
 
   req.file ? userData.photo = await User.uploadPhoto(req.file) : userData.photo = DEFAULT_PHOTO;
   delete userData.file;
